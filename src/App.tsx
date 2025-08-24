@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { ethers } from 'ethers';
 import axios from 'axios';
 import { Fingerprint } from 'lucide-react';
-import { ImageWithFallback } from './components/figma/ImageWithFallback';
+import { ImageWithFallback } from './components/figma/ImageWithFallback.tsx';
 import './App.css';
 
 declare global {
@@ -62,8 +62,9 @@ export default function App() {
     
     try {
       const response = await axios.get(`${USER_API_BASE_URL}/user/${account}`);
-      setExistingUsername(response.data.username);
-      setStatus(`Welcome back, ${response.data.username}!`);
+  const data = response.data as { username: string };
+  setExistingUsername(data.username);
+  setStatus(`Welcome back, ${data.username}!`);
     } catch (error: any) {
       if (error.response && error.response.status === 404) {
         setShowUsernameForm(true);
@@ -124,9 +125,10 @@ export default function App() {
         username: username.trim()
       });
       
-      setExistingUsername(response.data.username);
-      setShowUsernameForm(false);
-      setStatus(`Username saved successfully! Welcome, ${response.data.username}!`);
+  const data = response.data as { username: string };
+  setExistingUsername(data.username);
+  setShowUsernameForm(false);
+  setStatus(`Username saved successfully! Welcome, ${data.username}!`);
     } catch (error: any) {
       if (error.response && error.response.data.error === 'Username already taken') {
         setStatus('Username already taken. Please choose another one.');
